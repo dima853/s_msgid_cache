@@ -95,3 +95,19 @@ void s_msgid_cache_cleanup_old(void) {
                removed_count, new_count);
     }
 }
+
+void s_msgid_cache_destroy(void) {
+    if (global_cache == NULL) {
+        return NULL;
+    }
+
+    if (global_cache->entries) {
+        free(global_cache->entries);
+        global_cache->entries = NULL;
+    }
+
+    free(global_cache);
+    global_cache = NULL;
+}
+
+
