@@ -69,3 +69,29 @@ int s_msgid_cache_add(uint32_t msgid, uint32_t source_ip) {
     
     return 0; 
 }
+
+void s_msgid_cache_cleanup_old(void) {
+    if (!global_cache || !global_cache->entries) return;
+    
+    time_t now = time(NULL);
+    size_t new_count = 0;
+    
+    for (size_t i = 0; i < global_cache->count; i++) {
+        if ((now - global_cache->entries[i].timestamp) <= ENTRY_TTL) {
+            if (new_count != i) {
+                global_cache->entries[new_count] = global_cache->entries[i];
+            }
+            new_count++;
+        }
+    }
+    
+    size_t removed_count = global_cache->count - new_count;
+    global_cache->count = new_count;
+    
+    global_cache->last_cleanup = now;
+    
+    if (removed_count > 0) {
+        printf("[CACHE] Cleaned %zu expired entries, now %zu active\n", 
+               removed_count, new_count);
+    }
+}
