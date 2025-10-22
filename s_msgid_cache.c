@@ -141,5 +141,28 @@ void s_msgid_cache_stats(void) {
 }
 
 cache_state_t s_msgid_cache_check(uint32_t msgid, uint32_t source_ip) {
-    return 
+    if (!global_cache) {
+        return CACHE_STATE_ERROR; 
+    }
+    
+    if (atomic_load(&global_cache->state) == CACHE_STATE_ERROR) {
+        return CACHE_STATE_ERROR; 
+    }
+    
+    for (size_t i = 0; i < global_cache->count; i++) {
+        if (global_cache->entries[i].msgid == msgid && 
+            global_cache->entries[i].source_ip == source_ip) {
+            
+            atomic_fetch_add(&global_cache->replay_detected, 1);
+            atomic_fetch_add(&global_cache->total_operations, 1);
+            atomic_fetch_add(&global_cache->check_operations, 1);
+            
+            return CACHE_STATE_EXISTS; 
+        }
+    }
+    
+    atomic_fetch_add(&global_cache->total_operations, 1);
+    atomic_fetch_add(&global_cache->check_operations, 1);
+    
+    return CACHE_STATE_EMPTY;
 }
