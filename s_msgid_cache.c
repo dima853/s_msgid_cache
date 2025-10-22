@@ -110,4 +110,32 @@ void s_msgid_cache_destroy(void) {
     global_cache = NULL;
 }
 
-
+void s_msgid_cache_stats(void) {
+    if (!global_cache) {
+        printf("[CACHE STATS] Cache not initialized\n");
+        return;
+    }
+    
+    printf("=== SNMP MSGID CACHE STATISTICS ===\n");
+    printf("State: %d\n", atomic_load(&global_cache->state));
+    printf("Entries: %zu/%zu (%.1f%% full)\n", 
+           global_cache->count, 
+           global_cache->capacity,
+           (float)global_cache->count / global_cache->capacity * 100.0);
+    printf("Total operations: %zu\n", atomic_load(&global_cache->total_operations));
+    printf("Add operations: %zu\n", atomic_load(&global_cache->add_operations));
+    printf("Check operations: %zu\n", atomic_load(&global_cache->check_operations));
+    printf("Replay detected: %zu\n", atomic_load(&global_cache->replay_detected));
+    
+    time_t now = time(NULL);
+    printf("Uptime: %ld seconds\n", now - global_cache->created_at);
+    printf("Last cleanup: %ld seconds ago\n", now - global_cache->last_cleanup);
+    
+    if (global_cache->count > 0) {
+        time_t oldest = now - global_cache->entries[0].timestamp;
+        time_t newest = now - global_cache->entries[global_cache->count-1].timestamp;
+        printf("Oldest entry: %ld sec, Newest entry: %ld sec\n", oldest, newest);
+    }
+    
+    printf("====================================\n");
+}
