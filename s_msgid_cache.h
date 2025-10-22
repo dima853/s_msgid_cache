@@ -6,6 +6,11 @@
 #include <time.h>
 #include <stdatomic.h>
 
+extern const struct s_msgid_cache *global_cache = NULL;
+
+extern const uint32_t DEFAULT_CAPACITY = 1000;
+extern const CLEANUP_INTERVAL = 300;
+
 typedef enum {
     CACHE_STATE_EMPTY = 0,    // запись отсутствует
     CACHE_STATE_EXISTS = 1,   // запись найдена (replay!)
