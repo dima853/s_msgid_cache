@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <string.h>
 
+static struct s_msgid_cache *global_cache = NULL;
+
 int s_msgid_cache_init(void) {
     if (global_cache != NULL) {
         return 0;
