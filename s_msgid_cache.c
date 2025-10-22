@@ -1,4 +1,4 @@
-э#include "s_msgid_cache.h"
+#include "s_msgid_cache.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
