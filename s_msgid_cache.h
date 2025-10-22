@@ -6,8 +6,6 @@
 #include <time.h>
 #include <stdatomic.h>
 
-extern const struct s_msgid_cache *global_cache = NULL;
-
 extern const uint8_t DEFAULT_CAPACITY;
 extern const time_t CLEANUP_INTERVAL;
 extern const time_t ENTRY_TTL;
