@@ -139,3 +139,7 @@ void s_msgid_cache_stats(void) {
     
     printf("====================================\n");
 }
+
+cache_state_t s_msgid_cache_check(uint32_t msgid, uint32_t source_ip) {
+    return 
+}
