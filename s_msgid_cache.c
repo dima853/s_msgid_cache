@@ -41,3 +41,31 @@ int s_msgid_cache_init(void) {
     printf("[MSGID_CACHE] Initialized with capacity: %zu\n", global_cache->capacity);
     return 0;
 }
+
+int s_msgid_cache_add(uint32_t msgid, uint32_t source_ip) {
+    if (!global_cache) {
+        return -1; 
+    }
+    
+    if (atomic_load(&global_cache->state) == CACHE_STATE_ERROR) {
+        return -1; 
+    }
+    
+    if (global_cache->count >= global_cache->capacity) {
+        s_msgid_cache_cleanup_old(); // чистим устаревшие
+    }
+    
+    global_cache->entries[global_cache->count].msgid = msgid;
+    global_cache->entries[global_cache->count].timestamp = time(NULL);
+    global_cache->entries[global_cache->count].source_ip = source_ip;
+    global_cache->count++;
+    
+    atomic_fetch_add(&global_cache->total_operations, 1);
+    atomic_fetch_add(&global_cache->add_operations, 1);
+    
+    if (atomic_load(&global_cache->total_operations) % 100 == 0) {
+        s_msgid_cache_cleanup_old();
+    }
+    
+    return 0; 
+}
