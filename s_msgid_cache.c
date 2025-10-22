@@ -3,12 +3,6 @@
 #include <stdio.h>
 #include <string.h>
 
-static struct s_msgid_cache *global_cache = NULL;
-
-#define DEFAULT_CAPACITY 1000
-#define CLEANUP_INTERVAL 300    // 5 минут
-#define ENTRY_TTL 1800          // 30 минут жизни записи
-
 int s_msgid_cache_init(void) {
     if (global_cache != NULL) {
         return 0;
