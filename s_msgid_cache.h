@@ -6,7 +6,7 @@
 #include <time.h>
 #include <stdatomic.h>
 
-extern const uint8_t DEFAULT_CAPACITY;
+extern const size_t DEFAULT_CAPACITY;
 extern const time_t CLEANUP_INTERVAL;
 extern const time_t ENTRY_TTL;
 
